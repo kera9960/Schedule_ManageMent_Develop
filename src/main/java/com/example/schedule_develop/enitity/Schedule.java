@@ -1,7 +1,6 @@
 package com.example.schedule_develop.enitity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +9,18 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "schedules")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Schedule {
+public class Schedule extends BaseEntity{
 
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String title;
+    private String userName;
+    private String content;
+
+    public Schedule(String title,String userName,String content){
+        this.title = title;
+        this.userName = userName;
+        this.content = content;
+    }
 
 }
