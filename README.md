@@ -16,9 +16,8 @@
 ```json
 {
   "title" : "일정 제목",
-  "author" : "작성자명",
-  "content" : "일정 내용",
-  "password" : "비밀번호"
+  "userName" : "작성자명",
+  "content" : "일정 내용"
 }
 ```
 #### Response
@@ -26,7 +25,7 @@
 {
   "id" : 1,
   "title" : "일정 제목",
-  "author" : "작성자명",
+  "userName" : "작성자명",
   "content" : "일정 내용",
   "createdAt" : "2026-04-10T14:30:00",
   "updatedAt" : "2026-04-10T14:30:00"
@@ -43,7 +42,7 @@
 {
   "id" : 1,
   "title" : "일정 제목",
-  "author" : "작성자명",
+  "userName" : "작성자명",
   "content" : "일정 내용",
   "createdAt" : "2026-04-10T14:30:00",
   "updatedAt" : "2026-04-10T14:30:00"
@@ -60,7 +59,7 @@
   {
     "id" : 1,
     "title" : "일정 제목",
-    "author" : "작성자명",
+    "userName" : "작성자명",
     "content" : "일정 내용",
     "createdAt" : "2026-04-10T14:30:00",
     "updatedAt" : "2026-04-10T14:30:00"
@@ -77,8 +76,7 @@
 ```json
 {
   "title" : "일정 제목",
-  "author" : "작성자명",
-  "password" : "비밀번호"
+  "userName" : "작성자명"
 }
 ```
 
@@ -87,7 +85,7 @@
 {
   "id" : 1,
   "title" : "일정 제목",
-  "author" : "작성자명",
+  "userName" : "작성자명",
   "content" : "일정 내용",
   "createdAt" : "2026-04-10T14:30:00",
   "updatedAt" : "2026-04-10T14:30:00"
@@ -98,12 +96,6 @@
 - Method : DELETE
 - URL : /schedules/{scheduleId}
 - Path Variable : scheduleId
-#### Request
-```json
-{
-  "password": "비밀번호"
-}
-```
 
 #### Response (204 No Content)
 
