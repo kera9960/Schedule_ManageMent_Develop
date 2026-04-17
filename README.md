@@ -68,7 +68,7 @@
 ```
 
 ### 일정 수정
-- Method : PATCH
+- Method : PUT
 - URL : /scedules/{scheduleId}
 - Path Variable : scheduleId
 
@@ -76,7 +76,8 @@
 ```json
 {
   "title" : "일정 제목",
-  "userName" : "작성자명"
+  "userName" : "작성자명",
+  "content" : "일정 내용"
 }
 ```
 

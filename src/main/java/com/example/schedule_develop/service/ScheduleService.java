@@ -1,8 +1,6 @@
 package com.example.schedule_develop.service;
 
-import com.example.schedule_develop.dto.CreateScheduleRequestDto;
-import com.example.schedule_develop.dto.CreateScheduleResponseDto;
-import com.example.schedule_develop.dto.GetScheduleResponseDto;
+import com.example.schedule_develop.dto.*;
 import com.example.schedule_develop.enitity.Schedule;
 import com.example.schedule_develop.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +15,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
-
     @Transactional
     public CreateScheduleResponseDto save(CreateScheduleRequestDto requestDto) {
         Schedule schedule = new Schedule(
@@ -33,7 +30,6 @@ public class ScheduleService {
                 savedSchedule.getCreatedAt(),
                 savedSchedule.getUpdatedAt());
     }
-
     @Transactional
     public List<GetScheduleResponseDto> findAll() {
         List<Schedule> schedules = scheduleRepository.findAll();
@@ -51,13 +47,30 @@ public class ScheduleService {
         }
         return dtos;
     }
-    
     @Transactional
     public GetScheduleResponseDto findOne(Long scheduleId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
                 ()-> new IllegalStateException("없는 일정입니다.")
         );
         return new GetScheduleResponseDto(
+                schedule.getId(),
+                schedule.getTitle(),
+                schedule.getUserName(),
+                schedule.getContent(),
+                schedule.getCreatedAt(),
+                schedule.getUpdatedAt()
+        );
+    }
+    @Transactional
+    public UpdateScheduleResponseDto update(Long scheduleId, UpdateScheduleRequestDto requestDto) {
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
+                ()-> new IllegalStateException("없는 일정입니다.")
+        );
+        schedule.update(
+                requestDto.getTitle(),
+                requestDto.getUserName(),
+                requestDto.getContent());
+        return new UpdateScheduleResponseDto(
                 schedule.getId(),
                 schedule.getTitle(),
                 schedule.getUserName(),
