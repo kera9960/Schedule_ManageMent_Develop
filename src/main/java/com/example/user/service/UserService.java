@@ -1,8 +1,6 @@
 package com.example.user.service;
 
-import com.example.user.dto.CreateUserRequestDto;
-import com.example.user.dto.CreateUserResponseDto;
-import com.example.user.dto.GetUserResponseDto;
+import com.example.user.dto.*;
 import com.example.user.entity.User;
 import com.example.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -53,6 +51,22 @@ public class UserService {
                 () -> new IllegalStateException("없는 유저입니다.")
         );
         return new GetUserResponseDto(
+                user.getId(),
+                user.getUserName(),
+                user.getEmail(),
+                user.getCreatedAt(),
+                user.getUpdatedAt()
+        );
+    }
+    @Transactional
+    public UpdateUserResponseDto update(Long userId, UpdateUserRequestDto requestDto) {
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new IllegalStateException("없는 유저입니다.")
+        );
+        user.update(
+                requestDto.getUserName(),
+                requestDto.getEmail());
+        return new UpdateUserResponseDto(
                 user.getId(),
                 user.getUserName(),
                 user.getEmail(),

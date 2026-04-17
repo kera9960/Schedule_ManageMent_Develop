@@ -1,8 +1,6 @@
 package com.example.user.controller;
 
-import com.example.user.dto.CreateUserRequestDto;
-import com.example.user.dto.CreateUserResponseDto;
-import com.example.user.dto.GetUserResponseDto;
+import com.example.user.dto.*;
 import com.example.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,5 +31,13 @@ public class UserController {
             @PathVariable Long userId
     ){
         return ResponseEntity.status(HttpStatus.OK).body(userService.findOne(userId));
+    }
+
+    @PutMapping("/users/{userId}")
+    public ResponseEntity<UpdateUserResponseDto> updateUser(
+            @PathVariable Long userId,
+            @RequestBody UpdateUserRequestDto requestDto
+    ){
+        return ResponseEntity.status(HttpStatus.OK).body(userService.update(userId,requestDto));
     }
 }
