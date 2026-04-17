@@ -30,7 +30,7 @@ public class ScheduleService {
                 savedSchedule.getCreatedAt(),
                 savedSchedule.getUpdatedAt());
     }
-    @Transactional
+    @Transactional(readOnly = true)
     public List<GetScheduleResponseDto> findAll() {
         List<Schedule> schedules = scheduleRepository.findAll();
         List<GetScheduleResponseDto> dtos = new ArrayList<>();
@@ -47,7 +47,7 @@ public class ScheduleService {
         }
         return dtos;
     }
-    @Transactional
+    @Transactional(readOnly = true)
     public GetScheduleResponseDto findOne(Long scheduleId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
                 ()-> new IllegalStateException("없는 일정입니다.")
