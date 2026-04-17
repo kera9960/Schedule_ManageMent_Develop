@@ -1,7 +1,8 @@
-package com.example.user.controller;
+package com.example.schedule_develop.user.controller;
 
+import com.example.schedule_develop.user.dto.*;
 import com.example.user.dto.*;
-import com.example.user.service.UserService;
+import com.example.schedule_develop.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

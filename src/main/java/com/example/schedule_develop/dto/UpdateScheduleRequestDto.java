@@ -6,6 +6,6 @@ import lombok.Getter;
 public class UpdateScheduleRequestDto {
 
     private String title;
-    private String userName;
     private String content;
+    private Long userId;
 }

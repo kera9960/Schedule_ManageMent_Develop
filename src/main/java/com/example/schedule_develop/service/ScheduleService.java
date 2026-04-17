@@ -3,29 +3,35 @@ package com.example.schedule_develop.service;
 import com.example.schedule_develop.dto.*;
 import com.example.schedule_develop.enitity.Schedule;
 import com.example.schedule_develop.repository.ScheduleRepository;
+
+import com.example.schedule_develop.user.entity.User;
+import com.example.schedule_develop.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
+    private final UserRepository userRepository;
     @Transactional
     public CreateScheduleResponseDto save(CreateScheduleRequestDto requestDto) {
+        User user = userRepository.findById(requestDto.getUserId()).orElseThrow(
+                ()-> new IllegalStateException("없는 유저입니다.")
+        );
         Schedule schedule = new Schedule(
                 requestDto.getTitle(),
-                requestDto.getUserName(),
-                requestDto.getContent());
+                requestDto.getContent(),
+                user);
         Schedule savedSchedule = scheduleRepository.save(schedule);
         return new CreateScheduleResponseDto(
                 savedSchedule.getId(),
                 savedSchedule.getTitle(),
-                savedSchedule.getUserName(),
+                savedSchedule.getUser().getId(),
                 savedSchedule.getContent(),
                 savedSchedule.getCreatedAt(),
                 savedSchedule.getUpdatedAt());
@@ -38,7 +44,7 @@ public class ScheduleService {
             GetScheduleResponseDto dto = new GetScheduleResponseDto(
                     schedule.getId(),
                     schedule.getTitle(),
-                    schedule.getUserName(),
+                    schedule.getUser().getId(),
                     schedule.getContent(),
                     schedule.getCreatedAt(),
                     schedule.getUpdatedAt()
@@ -55,7 +61,7 @@ public class ScheduleService {
         return new GetScheduleResponseDto(
                 schedule.getId(),
                 schedule.getTitle(),
-                schedule.getUserName(),
+                schedule.getUser().getId(),
                 schedule.getContent(),
                 schedule.getCreatedAt(),
                 schedule.getUpdatedAt()
@@ -68,12 +74,11 @@ public class ScheduleService {
         );
         schedule.update(
                 requestDto.getTitle(),
-                requestDto.getUserName(),
                 requestDto.getContent());
         return new UpdateScheduleResponseDto(
                 schedule.getId(),
                 schedule.getTitle(),
-                schedule.getUserName(),
+                schedule.getUser().getId(),
                 schedule.getContent(),
                 schedule.getCreatedAt(),
                 schedule.getUpdatedAt()
