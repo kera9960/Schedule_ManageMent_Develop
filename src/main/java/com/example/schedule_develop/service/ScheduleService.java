@@ -2,16 +2,23 @@ package com.example.schedule_develop.service;
 
 import com.example.schedule_develop.dto.CreateScheduleRequestDto;
 import com.example.schedule_develop.dto.CreateScheduleResponseDto;
+import com.example.schedule_develop.dto.GetScheduleResponseDto;
 import com.example.schedule_develop.enitity.Schedule;
 import com.example.schedule_develop.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
 
+    @Transactional
     public CreateScheduleResponseDto save(CreateScheduleRequestDto requestDto) {
         Schedule schedule = new Schedule(
                 requestDto.getTitle(),
@@ -25,5 +32,38 @@ public class ScheduleService {
                 savedSchedule.getContent(),
                 savedSchedule.getCreatedAt(),
                 savedSchedule.getUpdatedAt());
+    }
+
+    @Transactional
+    public List<GetScheduleResponseDto> findAll() {
+        List<Schedule> schedules = scheduleRepository.findAll();
+        List<GetScheduleResponseDto> dtos = new ArrayList<>();
+        for(Schedule schedule : schedules){
+            GetScheduleResponseDto dto = new GetScheduleResponseDto(
+                    schedule.getId(),
+                    schedule.getTitle(),
+                    schedule.getUserName(),
+                    schedule.getContent(),
+                    schedule.getCreatedAt(),
+                    schedule.getUpdatedAt()
+            );
+            dtos.add(dto);
+        }
+        return dtos;
+    }
+    
+    @Transactional
+    public GetScheduleResponseDto findOne(Long scheduleId) {
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
+                ()-> new IllegalStateException("없는 일정입니다.")
+        );
+        return new GetScheduleResponseDto(
+                schedule.getId(),
+                schedule.getTitle(),
+                schedule.getUserName(),
+                schedule.getContent(),
+                schedule.getCreatedAt(),
+                schedule.getUpdatedAt()
+        );
     }
 }
