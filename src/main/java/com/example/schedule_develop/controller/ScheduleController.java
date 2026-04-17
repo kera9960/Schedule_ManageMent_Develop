@@ -32,7 +32,7 @@ public class ScheduleController {
         return ResponseEntity.status(HttpStatus.OK).body(scheduleService.findOne(scheduleId));
     }
 
-    @PutMapping("/shcedules/{scheduleId}")
+    @PutMapping("/schedules/{scheduleId}")
     public ResponseEntity<UpdateScheduleResponseDto> updateSchedule(
             @PathVariable Long scheduleId,
             @RequestBody UpdateScheduleRequestDto requestDto){
