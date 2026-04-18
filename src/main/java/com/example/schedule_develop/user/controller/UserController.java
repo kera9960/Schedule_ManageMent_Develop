@@ -2,9 +2,12 @@ package com.example.schedule_develop.user.controller;
 
 import com.example.schedule_develop.user.dto.*;
 import com.example.schedule_develop.user.dto.*;
+import com.example.schedule_develop.user.entity.User;
 import com.example.schedule_develop.user.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,15 +41,40 @@ public class UserController {
     @PutMapping("/users/{userId}")
     public ResponseEntity<UpdateUserResponseDto> updateUser(
             @PathVariable Long userId,
-            @RequestBody UpdateUserRequestDto requestDto
+            @RequestBody UpdateUserRequestDto requestDto,
+            HttpSession session
     ){
+        SessionUserDto sessionUserDto = (SessionUserDto) session.getAttribute("loginUser");
+        if (sessionUserDto==null){
+            throw new IllegalStateException("로그인이 필요합니다.");
+        }
+        if (!sessionUserDto.getId().equals(userId)){
+            throw new IllegalStateException("본인만 수정 가능합니다.");
+        }
         return ResponseEntity.status(HttpStatus.OK).body(userService.update(userId,requestDto));
     }
 
     @DeleteMapping("/users/{userId}")
     public ResponseEntity<Void> deleteUser(
-            @PathVariable Long userId
-    ){  userService.delete(userId);
+            @PathVariable Long userId,
+            HttpSession session
+    ){
+        SessionUserDto sessionUserDto = (SessionUserDto) session.getAttribute("loginUser");
+        if (sessionUserDto==null){
+            throw new IllegalStateException("로그인이 필요합니다.");
+        }
+        if (!sessionUserDto.getId().equals(userId)){
+            throw new IllegalStateException("본인만 삭제 가능합니다.");
+        }
+        userService.delete(userId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginRequestDto request, HttpSession session){
+        User user = userService.login(request.getEmail(), request.getPassword());
+        SessionUserDto sessionUserDto = new SessionUserDto(user.getId(),user.getEmail());
+        session.setAttribute("loginUser",sessionUserDto);
+        return ResponseEntity.status(HttpStatus.OK).body(new LoginResponseDto(user.getId(), user.getEmail()));
     }
 }

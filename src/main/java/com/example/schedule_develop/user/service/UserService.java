@@ -84,4 +84,15 @@ public class UserService {
         }
         userRepository.deleteById(userId);
     }
+
+    @Transactional
+    public User login(String email, String password){
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new IllegalStateException("없는 유저입니다.")
+        );
+        if (!password.equals(user.getPassword())){
+            throw new IllegalStateException("비밀번호가 틀렸습니다.");
+        }
+        return user;
+    }
 }
