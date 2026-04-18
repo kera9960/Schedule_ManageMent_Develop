@@ -1,8 +1,9 @@
 package com.example.schedule_develop.user.controller;
 
 import com.example.schedule_develop.user.dto.*;
-import com.example.user.dto.*;
+import com.example.schedule_develop.user.dto.*;
 import com.example.schedule_develop.user.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ public class UserController {
 
     @PostMapping("/users")
     public ResponseEntity<CreateUserResponseDto> createUser(
-            @RequestBody CreateUserRequestDto requestDto
+           @Valid @RequestBody CreateUserRequestDto requestDto
     ){
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(requestDto));
     }

@@ -1,7 +1,7 @@
 package com.example.schedule_develop.user.service;
 
 import com.example.schedule_develop.user.dto.*;
-import com.example.user.dto.*;
+import com.example.schedule_develop.user.dto.*;
 import com.example.schedule_develop.user.entity.User;
 import com.example.schedule_develop.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,8 @@ public class UserService {
     public CreateUserResponseDto save(CreateUserRequestDto requestDto) {
         User user = new User(
                 requestDto.getUserName(),
-                requestDto.getEmail());
+                requestDto.getEmail(),
+                requestDto.getPassword());
         User savedUser = userRepository.save(user);
 
         return new CreateUserResponseDto(
