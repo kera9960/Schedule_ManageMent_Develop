@@ -3,6 +3,7 @@ package com.example.schedule_develop.comment.controller;
 import com.example.schedule_develop.comment.dto.CreateCommentRequestDto;
 import com.example.schedule_develop.comment.dto.CreateCommentResponseDto;
 import com.example.schedule_develop.comment.service.CommentService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class CommentController {
     @PostMapping
     public ResponseEntity<CreateCommentResponseDto> createComment(
             @PathVariable Long scheduleId,
-            @RequestBody CreateCommentRequestDto requestDto
+            @Valid @RequestBody CreateCommentRequestDto requestDto
             ){
         return ResponseEntity.status(HttpStatus.CREATED).body(commentService.save(scheduleId,requestDto));
     }

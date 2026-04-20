@@ -3,7 +3,6 @@ package com.example.schedule_develop.service;
 import com.example.schedule_develop.dto.*;
 import com.example.schedule_develop.enitity.Schedule;
 import com.example.schedule_develop.repository.ScheduleRepository;
-
 import com.example.schedule_develop.user.entity.User;
 import com.example.schedule_develop.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +18,8 @@ public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final UserRepository userRepository;
     @Transactional
-    public CreateScheduleResponseDto save(CreateScheduleRequestDto requestDto) {
-        User user = userRepository.findById(requestDto.getUserId()).orElseThrow(
+    public CreateScheduleResponseDto save(CreateScheduleRequestDto requestDto,Long loginUserId) {
+        User user = userRepository.findById(loginUserId).orElseThrow(
                 ()-> new IllegalStateException("없는 유저입니다.")
         );
         Schedule schedule = new Schedule(
@@ -68,10 +67,13 @@ public class ScheduleService {
         );
     }
     @Transactional
-    public UpdateScheduleResponseDto update(Long scheduleId, UpdateScheduleRequestDto requestDto) {
+    public UpdateScheduleResponseDto update(Long scheduleId, UpdateScheduleRequestDto requestDto,Long loginUserId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
                 ()-> new IllegalStateException("없는 일정입니다.")
         );
+        if (!loginUserId.equals(schedule.getUser().getId())){
+            throw new IllegalStateException("본인만 수정 가능합니다.");
+        }
         schedule.update(
                 requestDto.getTitle(),
                 requestDto.getContent());
@@ -85,11 +87,13 @@ public class ScheduleService {
         );
     }
     @Transactional
-    public void delete(Long scheduleId) {
-        boolean existence = scheduleRepository.existsById(scheduleId);
-        if (!existence){
-            throw new IllegalStateException("없는 일정입니다.");
+    public void delete(Long scheduleId, Long loginUserId) {
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
+                ()-> new IllegalStateException("없는 일정입니다.")
+        );
+        if (!loginUserId.equals(schedule.getUser().getId())){
+            throw new IllegalStateException("본인만 삭제 가능합니다.");
         }
-        scheduleRepository.deleteById(scheduleId);
+        scheduleRepository.delete(schedule);
     }
 }

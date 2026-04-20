@@ -7,5 +7,4 @@ public class UpdateScheduleRequestDto {
 
     private String title;
     private String content;
-    private Long userId;
 }

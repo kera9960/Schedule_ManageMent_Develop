@@ -19,7 +19,6 @@
 ```json
 {
   "title" : "일정 제목",
-  "userId" : 1,
   "content" : "일정 내용"
 }
 ```

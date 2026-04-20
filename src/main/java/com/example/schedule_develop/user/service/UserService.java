@@ -1,7 +1,6 @@
 package com.example.schedule_develop.user.service;
 
 import com.example.schedule_develop.user.dto.*;
-import com.example.schedule_develop.user.dto.*;
 import com.example.schedule_develop.user.entity.User;
 import com.example.schedule_develop.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -65,6 +64,7 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new IllegalStateException("없는 유저입니다.")
         );
+
         user.update(
                 requestDto.getUserName(),
                 requestDto.getEmail());
@@ -78,11 +78,10 @@ public class UserService {
     }
     @Transactional
     public void delete(Long userId) {
-        boolean existence = userRepository.existsById(userId);
-        if (!existence){
-            throw new IllegalStateException("없는 유저입니다.");
-        }
-        userRepository.deleteById(userId);
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new IllegalStateException("없는 유저입니다.")
+        );
+        userRepository.delete(user);
     }
 
     @Transactional
