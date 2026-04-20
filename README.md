@@ -8,7 +8,7 @@
 | POST   | /schedules              | 일정 생성    |
 | GET    | /schedules/{scheduleId} | 일정 단건 조회 |
 | GET    | /schedules              | 일정 목록 조회 |
-| PUT    | /schedules/{scheduleId} | 일정 수정    |
+| PATCH  | /schedules/{scheduleId} | 일정 수정    |
 | DELETE | /schedules/{scheduleId} | 일정 삭제    |
 
 ### 일정 생성
@@ -70,7 +70,7 @@
 ```
 
 ### 일정 수정
-- Method : PUT
+- Method : PATCH
 - URL : /schedules/{scheduleId}
 - Path Variable : scheduleId
 
@@ -110,7 +110,7 @@
 | POST   | /users          | 유저 생성    |
 | GET    | /users/{userId} | 유저 단일 조회 |
 | GET    | /users          | 유저 목록 조회 |
-| PUT    | /users/{userId} | 유저 수정    |
+| PATCH  | /users/{userId} | 유저 수정    |
 | DELETE | /users/{userId} | 유저 삭제    |
 
 ### 유저 생성
@@ -170,7 +170,7 @@
 ```
 
 ### 유저 수정
-- Method : PUT
+- Method : PATCH
 - URL : /users/{userId}
 - Path Variable : userId
 

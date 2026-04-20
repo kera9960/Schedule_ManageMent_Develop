@@ -1,5 +1,7 @@
 package com.example.schedule_develop.user.service;
 
+import com.example.schedule_develop.exception.BadRequestException;
+import com.example.schedule_develop.exception.NotFoundException;
 import com.example.schedule_develop.user.dto.*;
 import com.example.schedule_develop.user.entity.User;
 import com.example.schedule_develop.user.repository.UserRepository;
@@ -49,7 +51,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public GetUserResponseDto findOne(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new IllegalStateException("없는 유저입니다.")
+                () -> new NotFoundException("없는 유저입니다.")
         );
         return new GetUserResponseDto(
                 user.getId(),
@@ -62,7 +64,7 @@ public class UserService {
     @Transactional
     public UpdateUserResponseDto update(Long userId, UpdateUserRequestDto requestDto) {
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new IllegalStateException("없는 유저입니다.")
+                () -> new NotFoundException("없는 유저입니다.")
         );
 
         user.update(
@@ -79,7 +81,7 @@ public class UserService {
     @Transactional
     public void delete(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new IllegalStateException("없는 유저입니다.")
+                () -> new NotFoundException("없는 유저입니다.")
         );
         userRepository.delete(user);
     }
@@ -87,10 +89,10 @@ public class UserService {
     @Transactional
     public User login(String email, String password){
         User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new IllegalStateException("없는 유저입니다.")
+                () -> new NotFoundException("없는 유저입니다.")
         );
         if (!password.equals(user.getPassword())){
-            throw new IllegalStateException("비밀번호가 틀렸습니다.");
+            throw new BadRequestException("비밀번호가 틀렸습니다.");
         }
         return user;
     }

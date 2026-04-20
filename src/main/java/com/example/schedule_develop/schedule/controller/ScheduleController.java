@@ -1,8 +1,8 @@
-package com.example.schedule_develop.controller;
+package com.example.schedule_develop.schedule.controller;
 
-import com.example.schedule_develop.dto.*;
-import com.example.schedule_develop.repository.ScheduleRepository;
-import com.example.schedule_develop.service.ScheduleService;
+import com.example.schedule_develop.exception.UnauthorizedException;
+import com.example.schedule_develop.schedule.dto.*;
+import com.example.schedule_develop.schedule.service.ScheduleService;
 import com.example.schedule_develop.user.dto.SessionUserDto;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -21,10 +21,11 @@ public class ScheduleController {
 
     @PostMapping("/schedules")
     public ResponseEntity<CreateScheduleResponseDto> create(
-            @Valid @RequestBody CreateScheduleRequestDto requestDto, HttpSession session){
+            @Valid @RequestBody CreateScheduleRequestDto requestDto,
+            HttpSession session){
         SessionUserDto sessionUserDto = (SessionUserDto) session.getAttribute("loginUser");
         if (sessionUserDto ==null){
-            throw new IllegalStateException("로그인이 필요합니다.");
+            throw new UnauthorizedException("로그인이 필요합니다.");
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(scheduleService.save(requestDto,sessionUserDto.getId()));
     }
@@ -40,14 +41,14 @@ public class ScheduleController {
         return ResponseEntity.status(HttpStatus.OK).body(scheduleService.findOne(scheduleId));
     }
 
-    @PutMapping("/schedules/{scheduleId}")
+    @PatchMapping("/schedules/{scheduleId}")
     public ResponseEntity<UpdateScheduleResponseDto> update(
             @PathVariable Long scheduleId,
-            @RequestBody UpdateScheduleRequestDto requestDto,
+            @Valid @RequestBody UpdateScheduleRequestDto requestDto,
             HttpSession session){
         SessionUserDto sessionUserDto = (SessionUserDto) session.getAttribute("loginUser");
         if (sessionUserDto==null){
-            throw new IllegalStateException("로그인이 필요합니다.");
+            throw new UnauthorizedException("로그인이 필요합니다.");
         }
         return ResponseEntity.status(HttpStatus.OK).body(scheduleService.update(scheduleId,requestDto,sessionUserDto.getId()));
     }
@@ -58,7 +59,7 @@ public class ScheduleController {
             HttpSession session){
         SessionUserDto sessionUserDto = (SessionUserDto) session.getAttribute("loginUser");
         if (sessionUserDto==null){
-            throw new IllegalStateException("로그인이 필요합니다.");
+            throw new UnauthorizedException("로그인이 필요합니다.");
         }
         scheduleService.delete(scheduleId,sessionUserDto.getId());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

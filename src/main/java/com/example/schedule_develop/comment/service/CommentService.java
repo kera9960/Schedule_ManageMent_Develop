@@ -4,8 +4,9 @@ import com.example.schedule_develop.comment.dto.CreateCommentRequestDto;
 import com.example.schedule_develop.comment.dto.CreateCommentResponseDto;
 import com.example.schedule_develop.comment.entity.Comment;
 import com.example.schedule_develop.comment.repository.CommentRepository;
-import com.example.schedule_develop.enitity.Schedule;
-import com.example.schedule_develop.repository.ScheduleRepository;
+import com.example.schedule_develop.exception.NotFoundException;
+import com.example.schedule_develop.schedule.enitity.Schedule;
+import com.example.schedule_develop.schedule.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +20,7 @@ public class CommentService {
     @Transactional
     public CreateCommentResponseDto save(Long scheduleId, CreateCommentRequestDto requestDto){
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
-                () -> new IllegalStateException("없는 일정입니다.")
+                () -> new NotFoundException("없는 일정입니다.")
         );
         long count  = commentRepository.countBySchedule(schedule);
         if (count>=10){
