@@ -1,5 +1,6 @@
 package com.example.schedule_develop.user.service;
 
+import com.example.schedule_develop.config.PasswordEncoder;
 import com.example.schedule_develop.exception.BadRequestException;
 import com.example.schedule_develop.exception.NotFoundException;
 import com.example.schedule_develop.user.dto.*;
@@ -17,12 +18,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
     @Transactional
     public CreateUserResponseDto save(CreateUserRequestDto requestDto) {
         User user = new User(
                 requestDto.getUserName(),
                 requestDto.getEmail(),
-                requestDto.getPassword());
+                passwordEncoder.encode(requestDto.getPassword()));
         User savedUser = userRepository.save(user);
 
         return new CreateUserResponseDto(
@@ -91,7 +94,7 @@ public class UserService {
         User user = userRepository.findByEmail(email).orElseThrow(
                 () -> new NotFoundException("없는 유저입니다.")
         );
-        if (!password.equals(user.getPassword())){
+        if (!passwordEncoder.matches(password,user.getPassword())){
             throw new BadRequestException("비밀번호가 틀렸습니다.");
         }
         return user;

@@ -37,7 +37,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(userService.findOne(userId));
     }
 
-    @PatchMapping("/users/{userId}")
+    @PutMapping("/users/{userId}")
     public ResponseEntity<UpdateUserResponseDto> updateUser(
             @PathVariable Long userId,
             @Valid @RequestBody UpdateUserRequestDto requestDto,

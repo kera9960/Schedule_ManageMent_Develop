@@ -11,9 +11,6 @@ public class CreateCommentRequestDto {
     @Size(min = 5, max = 200)
     private String content;
     @NotBlank
-    @Size(max = 4)
-    private String author;
-    @NotBlank
     @Size(min = 8,max = 20)
     private String password;
 }

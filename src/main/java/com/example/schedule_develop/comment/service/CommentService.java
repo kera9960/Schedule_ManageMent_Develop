@@ -22,14 +22,8 @@ public class CommentService {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
                 () -> new NotFoundException("없는 일정입니다.")
         );
-        long count  = commentRepository.countBySchedule(schedule);
-        if (count>=10){
-            throw new IllegalStateException("댓글은 10개까지 작성가능합니다.");
-        }
         Comment comment = new Comment(
-                requestDto.getAuthor(),
                 requestDto.getContent(),
-                requestDto.getPassword(),
                 schedule);
         Comment savedComment = commentRepository.save(comment);
         return CreateCommentResponseDto.from(savedComment);

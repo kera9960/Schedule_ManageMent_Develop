@@ -2,6 +2,7 @@ package com.example.schedule_develop.comment.entity;
 
 import com.example.schedule_develop.schedule.enitity.BaseEntity;
 import com.example.schedule_develop.schedule.enitity.Schedule;
+import com.example.schedule_develop.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -15,17 +16,13 @@ public class Comment extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String author;
     private String content;
-    private String password;
     @ManyToOne
     @JoinColumn(name = "schedule_id")
     private Schedule schedule;
 
-    public Comment(String author, String content, String password, Schedule schedule) {
-        this.author = author;
+    public Comment(String content, Schedule schedule) {
         this.content = content;
-        this.password = password;
         this.schedule = schedule;
     }
 }

@@ -11,15 +11,13 @@ public class CreateCommentResponseDto {
     private final Long id;
     private final Long scheduleId;
     private final String content;
-    private final String author;
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
 
-    public CreateCommentResponseDto(Long id, Long scheduleId, String content, String author, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public CreateCommentResponseDto(Long id, Long scheduleId, String content, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.scheduleId = scheduleId;
         this.content = content;
-        this.author = author;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -29,7 +27,6 @@ public class CreateCommentResponseDto {
                 comment.getId(),
                 comment.getSchedule().getId(),
                 comment.getContent(),
-                comment.getAuthor(),
                 comment.getCreatedAt(),
                 comment.getUpdatedAt()
         );
