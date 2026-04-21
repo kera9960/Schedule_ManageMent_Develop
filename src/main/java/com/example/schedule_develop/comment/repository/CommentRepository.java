@@ -4,6 +4,8 @@ import com.example.schedule_develop.comment.entity.Comment;
 import com.example.schedule_develop.schedule.enitity.Schedule;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 public interface CommentRepository extends JpaRepository<Comment,Long> {
-    long countBySchedule(Schedule schedule);
+    List<Comment> findCommentsBySchedule(Schedule schedule);
 }

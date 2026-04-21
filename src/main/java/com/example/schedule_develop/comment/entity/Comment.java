@@ -17,12 +17,16 @@ public class Comment extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String content;
-    @ManyToOne
-    @JoinColumn(name = "schedule_id")
+    @ManyToOne(fetch = FetchType.LAZY,optional = false)
+    @JoinColumn(name = "schedule_id",nullable = false)
     private Schedule schedule;
+    @ManyToOne(fetch = FetchType.LAZY,optional = false)
+    @JoinColumn(name = "user_id",nullable = false)
+    private User user;
 
-    public Comment(String content, Schedule schedule) {
+    public Comment(String content, Schedule schedule, User user) {
         this.content = content;
         this.schedule = schedule;
+        this.user = user;
     }
 }
