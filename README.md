@@ -250,7 +250,38 @@
 ]
 ```
 
+### 댓글 수정
+- Method : PUT
+- URL : /schedules/{scheduleId}/comments/{commentId}
+- Path Variable : commentId
+
+#### Request
+```json
+{
+  "content" : "댓글 내용"
+}
+```
+
+#### Response (200 OK)
+```json
+{
+  "id" : 1,
+  "scheduleId" : 1,
+  "userId" : 1,
+  "content" : "댓글 내용",
+  "createdAt" : "2026-04-10T14:30:00",
+  "updatedAt" : "2026-04-10T14:30:00"
+}
+```
+
+### 유저 삭제
+- Method : DELETE
+- URL : /schedules/{scheduleId}/comments/{commentId}
+- Path Variable : commentId
+
+#### Response (204 No Content)
+
 </details>
 
 ### ERD
-![ERD](src/main/resources/images/erd2.png)
+![ERD](src/main/resources/images/erd3.png)
