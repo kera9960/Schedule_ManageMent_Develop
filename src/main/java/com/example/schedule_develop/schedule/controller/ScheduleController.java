@@ -7,6 +7,7 @@ import com.example.schedule_develop.user.dto.SessionUserDto;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,9 +31,16 @@ public class ScheduleController {
         return ResponseEntity.status(HttpStatus.CREATED).body(scheduleService.save(requestDto,sessionUserDto.getId()));
     }
 
+//    @GetMapping("/schedules")
+//    public ResponseEntity<List<GetScheduleResponseDto>> getSchedules(){
+//        return ResponseEntity.status(HttpStatus.OK).body(scheduleService.findAll());
+//    }
+
     @GetMapping("/schedules")
-    public ResponseEntity<List<GetScheduleResponseDto>> getSchedules(){
-        return ResponseEntity.status(HttpStatus.OK).body(scheduleService.findAll());
+    public ResponseEntity<Page<GetSchedulePageResponseDto>> getPage(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size){
+        return ResponseEntity.status(HttpStatus.OK).body(scheduleService.getSchedulePage(page,size));
     }
 
     @GetMapping("/schedules/{scheduleId}")

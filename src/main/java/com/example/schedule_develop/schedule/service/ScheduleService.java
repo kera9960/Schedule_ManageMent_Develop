@@ -1,5 +1,6 @@
 package com.example.schedule_develop.schedule.service;
 
+import com.example.schedule_develop.comment.repository.CommentRepository;
 import com.example.schedule_develop.exception.ForbiddenException;
 import com.example.schedule_develop.exception.NotFoundException;
 import com.example.schedule_develop.schedule.dto.*;
@@ -8,6 +9,10 @@ import com.example.schedule_develop.schedule.repository.ScheduleRepository;
 import com.example.schedule_develop.user.entity.User;
 import com.example.schedule_develop.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +24,8 @@ import java.util.List;
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
+
     @Transactional
     public CreateScheduleResponseDto save(CreateScheduleRequestDto requestDto, Long loginUserId) {
         User user = userRepository.findById(loginUserId).orElseThrow(
@@ -37,23 +44,39 @@ public class ScheduleService {
                 savedSchedule.getCreatedAt(),
                 savedSchedule.getUpdatedAt());
     }
+//    @Transactional(readOnly = true)
+//    public List<GetScheduleResponseDto> findAll() {
+//        List<Schedule> schedules = scheduleRepository.findAll();
+//        List<GetScheduleResponseDto> dtos = new ArrayList<>();
+//        for(Schedule schedule : schedules){
+//            GetScheduleResponseDto dto = new GetScheduleResponseDto(
+//                    schedule.getId(),
+//                    schedule.getTitle(),
+//                    schedule.getUser().getId(),
+//                    schedule.getContent(),
+//                    schedule.getCreatedAt(),
+//                    schedule.getUpdatedAt()
+//            );
+//            dtos.add(dto);
+//        }
+//        return dtos;
+//    }
+
     @Transactional(readOnly = true)
-    public List<GetScheduleResponseDto> findAll() {
-        List<Schedule> schedules = scheduleRepository.findAll();
-        List<GetScheduleResponseDto> dtos = new ArrayList<>();
-        for(Schedule schedule : schedules){
-            GetScheduleResponseDto dto = new GetScheduleResponseDto(
-                    schedule.getId(),
-                    schedule.getTitle(),
-                    schedule.getUser().getId(),
-                    schedule.getContent(),
-                    schedule.getCreatedAt(),
-                    schedule.getUpdatedAt()
-            );
-            dtos.add(dto);
-        }
-        return dtos;
+    public Page<GetSchedulePageResponseDto> getSchedulePage(int page, int size){
+        Pageable pageable = PageRequest.of(page,size, Sort.Direction.DESC,"updatedAt");
+        Page<Schedule> schedulePage = scheduleRepository.findAll(pageable);
+        Page<GetSchedulePageResponseDto> pageResponse = schedulePage.map(schedule -> new GetSchedulePageResponseDto(
+                schedule.getTitle(),
+                schedule.getContent(),
+                commentRepository.countBySchedule(schedule),
+                schedule.getCreatedAt(),
+                schedule.getUpdatedAt(),
+                schedule.getUser().getUserName()
+        ));
+        return pageResponse;
     }
+
     @Transactional(readOnly = true)
     public GetScheduleResponseDto findOne(Long scheduleId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(

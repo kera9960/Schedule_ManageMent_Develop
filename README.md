@@ -274,7 +274,7 @@
 }
 ```
 
-### 유저 삭제
+### 댓글 삭제
 - Method : DELETE
 - URL : /schedules/{scheduleId}/comments/{commentId}
 - Path Variable : commentId
