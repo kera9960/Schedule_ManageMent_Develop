@@ -202,5 +202,55 @@
 
 </details>
 
+<details>
+
+<summary> 댓글 API</summary>
+
+| Method | URL                              | 기능       |
+|--------|----------------------------------|----------|
+| POST   | /schedules/{scheduleId}/comments | 댓글 생성    |
+| GET    | /schedules/{scheduleId}/comments | 댓글 목록 조회 |
+
+### 댓글 생성
+- Method : POST
+- URL : /schedules/{scheduleId}/comments
+
+#### Request
+```json
+{
+  "content" : "댓글 내용"
+}
+```
+#### Response (201 Created)
+```json
+{
+  "id" : 1,
+  "scheduleId" : 1,
+  "userId" : 1,
+  "content" : "댓글 내용",
+  "createdAt" : "2026-04-10T14:30:00",
+  "updatedAt" : "2026-04-10T14:30:00"
+}
+```
+### 댓글 목록 조회
+- Method : GET
+- URL : /schedules/{scheduleId}/comments
+
+#### Response (200 OK)
+```json
+[
+  {
+    "id" : 1,
+    "scheduleId" : 1,
+    "userId" : 1,
+    "content" : "댓글 내용",
+    "createdAt" : "2026-04-10T14:30:00",
+    "updatedAt" : "2026-04-10T14:30:00"
+  }
+]
+```
+
+</details>
+
 ### ERD
 ![ERD](src/main/resources/images/erd2.png)

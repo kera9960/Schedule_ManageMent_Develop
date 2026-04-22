@@ -1,10 +1,9 @@
 package com.example.schedule_develop.comment.service;
 
-import com.example.schedule_develop.comment.dto.CreateCommentRequestDto;
-import com.example.schedule_develop.comment.dto.CreateCommentResponseDto;
-import com.example.schedule_develop.comment.dto.GetCommentResponseDto;
+import com.example.schedule_develop.comment.dto.*;
 import com.example.schedule_develop.comment.entity.Comment;
 import com.example.schedule_develop.comment.repository.CommentRepository;
+import com.example.schedule_develop.exception.ForbiddenException;
 import com.example.schedule_develop.exception.NotFoundException;
 import com.example.schedule_develop.schedule.enitity.Schedule;
 import com.example.schedule_develop.schedule.repository.ScheduleRepository;
@@ -12,6 +11,7 @@ import com.example.schedule_develop.user.dto.SessionUserDto;
 import com.example.schedule_develop.user.entity.User;
 import com.example.schedule_develop.user.repository.UserRepository;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,6 +49,29 @@ public class CommentService {
         );
         List<Comment> comments = commentRepository.findCommentsBySchedule(schedule);
         return comments.stream()
-                .map(comment -> GetCommentResponseDto.from(comment)).toList();
+                .map(GetCommentResponseDto::from).toList();
+    }
+
+    @Transactional
+    public UpdateCommentResponseDto update(Long commentId, UpdateCommentRequestDto requestDto,Long loginUserId) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(
+                () -> new NotFoundException("없는 댓글입니다.")
+        );
+        if (!loginUserId.equals(comment.getUser().getId())){
+            throw new ForbiddenException("본인만 수정가능합니다.");
+        }
+        comment.update(requestDto.getContent());
+        return UpdateCommentResponseDto.from(comment);
+    }
+
+    @Transactional
+    public void delete(Long commentId, Long loginUserId) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(
+                () -> new NotFoundException("없는 댓글입니다.")
+        );
+        if (!loginUserId.equals(comment.getUser().getId())){
+            throw new ForbiddenException("본인만 삭제가능합니다.");
+        }
+        commentRepository.delete(comment);
     }
 }
