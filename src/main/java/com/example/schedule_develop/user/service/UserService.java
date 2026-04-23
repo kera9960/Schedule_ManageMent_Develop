@@ -2,6 +2,7 @@ package com.example.schedule_develop.user.service;
 
 import com.example.schedule_develop.config.PasswordEncoder;
 import com.example.schedule_develop.exception.BadRequestException;
+import com.example.schedule_develop.exception.DuplicateEmailException;
 import com.example.schedule_develop.exception.NotFoundException;
 import com.example.schedule_develop.user.dto.*;
 import com.example.schedule_develop.user.entity.User;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -22,6 +24,10 @@ public class UserService {
 
     @Transactional
     public CreateUserResponseDto save(CreateUserRequestDto requestDto) {
+        Optional<User> foundUser = userRepository.findByEmail(requestDto.getEmail());
+        if (foundUser.isPresent()){
+            throw new DuplicateEmailException("중복된 이메일입니다.");
+        }
         User user = new User(
                 requestDto.getUserName(),
                 requestDto.getEmail(),
