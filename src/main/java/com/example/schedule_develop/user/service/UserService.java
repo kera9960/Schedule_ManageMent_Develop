@@ -28,59 +28,36 @@ public class UserService {
                 passwordEncoder.encode(requestDto.getPassword()));
         User savedUser = userRepository.save(user);
 
-        return new CreateUserResponseDto(
-                savedUser.getId(),
-                savedUser.getUserName(),
-                savedUser.getEmail(),
-                savedUser.getCreatedAt(),
-                savedUser.getUpdatedAt());
+        return CreateUserResponseDto.from(savedUser);
     }
+
     @Transactional(readOnly = true)
     public List<GetUserResponseDto> findAll() {
-        List<User> Users = userRepository.findAll();
-        List<GetUserResponseDto> dtos = new ArrayList<>();
-        for(User user  : Users){
-            GetUserResponseDto dto = new GetUserResponseDto(
-                    user.getId(),
-                    user.getUserName(),
-                    user.getEmail(),
-                    user.getCreatedAt(),
-                    user.getUpdatedAt()
-            );
-            dtos.add(dto);
-        }
-        return dtos;
+        List<User> users = userRepository.findAll();
+        return users.stream()
+                .map(GetUserResponseDto::from)
+                .toList();
     }
+
     @Transactional(readOnly = true)
     public GetUserResponseDto findOne(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new NotFoundException("없는 유저입니다.")
         );
-        return new GetUserResponseDto(
-                user.getId(),
-                user.getUserName(),
-                user.getEmail(),
-                user.getCreatedAt(),
-                user.getUpdatedAt()
-        );
+        return GetUserResponseDto.from(user);
     }
+
     @Transactional
     public UpdateUserResponseDto update(Long userId, UpdateUserRequestDto requestDto) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new NotFoundException("없는 유저입니다.")
         );
-
         user.update(
                 requestDto.getUserName(),
                 requestDto.getEmail());
-        return new UpdateUserResponseDto(
-                user.getId(),
-                user.getUserName(),
-                user.getEmail(),
-                user.getCreatedAt(),
-                user.getUpdatedAt()
-        );
+        return UpdateUserResponseDto.from(user);
     }
+
     @Transactional
     public void delete(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(

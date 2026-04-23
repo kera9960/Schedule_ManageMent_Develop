@@ -1,5 +1,6 @@
 package com.example.schedule_develop.schedule.dto;
 
+import com.example.schedule_develop.schedule.enitity.Schedule;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -20,5 +21,16 @@ public class GetScheduleResponseDto {
         this.content = content;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+    }
+
+    public static GetScheduleResponseDto from(Schedule schedule){
+        return new GetScheduleResponseDto(
+                schedule.getId(),
+                schedule.getTitle(),
+                schedule.getUser().getId(),
+                schedule.getContent(),
+                schedule.getCreatedAt(),
+                schedule.getUpdatedAt()
+        );
     }
 }

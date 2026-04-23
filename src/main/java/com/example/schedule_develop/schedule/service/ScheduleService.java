@@ -16,9 +16,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class ScheduleService {
@@ -36,44 +33,15 @@ public class ScheduleService {
                 requestDto.getContent(),
                 user);
         Schedule savedSchedule = scheduleRepository.save(schedule);
-        return new CreateScheduleResponseDto(
-                savedSchedule.getId(),
-                savedSchedule.getTitle(),
-                savedSchedule.getUser().getId(),
-                savedSchedule.getContent(),
-                savedSchedule.getCreatedAt(),
-                savedSchedule.getUpdatedAt());
+        return CreateScheduleResponseDto.from(savedSchedule);
     }
-//    @Transactional(readOnly = true)
-//    public List<GetScheduleResponseDto> findAll() {
-//        List<Schedule> schedules = scheduleRepository.findAll();
-//        List<GetScheduleResponseDto> dtos = new ArrayList<>();
-//        for(Schedule schedule : schedules){
-//            GetScheduleResponseDto dto = new GetScheduleResponseDto(
-//                    schedule.getId(),
-//                    schedule.getTitle(),
-//                    schedule.getUser().getId(),
-//                    schedule.getContent(),
-//                    schedule.getCreatedAt(),
-//                    schedule.getUpdatedAt()
-//            );
-//            dtos.add(dto);
-//        }
-//        return dtos;
-//    }
 
     @Transactional(readOnly = true)
     public Page<GetSchedulePageResponseDto> getSchedulePage(int page, int size){
         Pageable pageable = PageRequest.of(page,size, Sort.Direction.DESC,"updatedAt");
         Page<Schedule> schedulePage = scheduleRepository.findAll(pageable);
-        Page<GetSchedulePageResponseDto> pageResponse = schedulePage.map(schedule -> new GetSchedulePageResponseDto(
-                schedule.getTitle(),
-                schedule.getContent(),
-                commentRepository.countBySchedule(schedule),
-                schedule.getCreatedAt(),
-                schedule.getUpdatedAt(),
-                schedule.getUser().getUserName()
-        ));
+        Page<GetSchedulePageResponseDto> pageResponse = schedulePage.map(schedule ->
+                GetSchedulePageResponseDto.from(schedule, commentRepository.countBySchedule(schedule)));
         return pageResponse;
     }
 
@@ -82,15 +50,9 @@ public class ScheduleService {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
                 ()-> new NotFoundException("없는 일정입니다.")
         );
-        return new GetScheduleResponseDto(
-                schedule.getId(),
-                schedule.getTitle(),
-                schedule.getUser().getId(),
-                schedule.getContent(),
-                schedule.getCreatedAt(),
-                schedule.getUpdatedAt()
-        );
+        return GetScheduleResponseDto.from(schedule);
     }
+
     @Transactional
     public UpdateScheduleResponseDto update(Long scheduleId, UpdateScheduleRequestDto requestDto, Long loginUserId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
@@ -102,15 +64,9 @@ public class ScheduleService {
         schedule.update(
                 requestDto.getTitle(),
                 requestDto.getContent());
-        return new UpdateScheduleResponseDto(
-                schedule.getId(),
-                schedule.getTitle(),
-                schedule.getUser().getId(),
-                schedule.getContent(),
-                schedule.getCreatedAt(),
-                schedule.getUpdatedAt()
-        );
+        return UpdateScheduleResponseDto.from(schedule);
     }
+
     @Transactional
     public void delete(Long scheduleId, Long loginUserId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(

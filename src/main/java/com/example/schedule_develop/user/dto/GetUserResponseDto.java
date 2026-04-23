@@ -1,5 +1,6 @@
 package com.example.schedule_develop.user.dto;
 
+import com.example.schedule_develop.user.entity.User;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -18,5 +19,15 @@ public class GetUserResponseDto {
         this.email = email;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+    }
+
+    public static GetUserResponseDto from(User user){
+        return new GetUserResponseDto(
+                user.getId(),
+                user.getUserName(),
+                user.getEmail(),
+                user.getCreatedAt(),
+                user.getUpdatedAt()
+        );
     }
 }
