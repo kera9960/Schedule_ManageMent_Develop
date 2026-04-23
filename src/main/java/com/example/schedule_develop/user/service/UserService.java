@@ -67,13 +67,14 @@ public class UserService {
     }
 
     @Transactional
-    public User login(String email, String password){
+    public SessionUserDto login(String email, String password){
         User user = userRepository.findByEmail(email).orElseThrow(
                 () -> new NotFoundException("없는 유저입니다.")
         );
         if (!passwordEncoder.matches(password,user.getPassword())){
             throw new BadRequestException("비밀번호가 틀렸습니다.");
         }
-        return user;
+        SessionUserDto sessionUserDto = new SessionUserDto(user.getId(), user.getEmail());
+        return sessionUserDto;
     }
 }

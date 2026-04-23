@@ -71,10 +71,9 @@ public class UserController {
     public ResponseEntity<LoginResponseDto> login(
             @Valid @RequestBody LoginRequestDto request,
             HttpSession session){
-        User user = userService.login(request.getEmail(), request.getPassword());
-        SessionUserDto sessionUserDto = new SessionUserDto(user.getId(),user.getEmail());
+        SessionUserDto sessionUserDto = userService.login(request.getEmail(), request.getPassword());
         session.setAttribute("loginUser",sessionUserDto);
-        return ResponseEntity.status(HttpStatus.OK).body(new LoginResponseDto(user.getId(), user.getEmail()));
+        return ResponseEntity.status(HttpStatus.OK).body(new LoginResponseDto(sessionUserDto.getId(), sessionUserDto.getEmail()));
     }
 
     @PostMapping("/logout")
